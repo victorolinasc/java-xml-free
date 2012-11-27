@@ -1,0 +1,213 @@
+
+<!DOCTYPE html>
+
+<!--
+  Google HTML5 slide template
+
+  Authors: Luke Mahé (code)
+           Marcin Wichary (code and design)
+
+           Dominic Mazzoni (browser compatibility)
+           Charles Chen (ChromeVox support)
+
+  URL: http://code.google.com/p/html5slides/
+-->
+
+<html>
+<head>
+    <title>Um mundo Java sem XML</title>
+
+    <meta charset='utf-8'>
+    <script
+    src='slides.js'></script>
+</head>
+
+<style>
+    /* Your individual styles here, or just use inline styles if that’s
+    what you want. */
+
+
+
+    </style>
+
+    <body style='display: none'>
+
+        <section class='slides layout-regular'>
+
+
+          <article>
+            <h1>
+              Um mundo Java sem XML
+          </h1>
+          <p>
+              Victor Oliveira Nascimento - victor.olinasc
+              <br>
+              27 de Novembro, SP - iMasters
+          </p>
+      </article>
+
+
+      <article>
+        <h3>
+          Configurações em <i>Python</i> e <i>Erlang</i>:
+      </h3>
+      <section>
+        <pre class="lang-python">
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse'
+        }
+    }
+}</pre>
+<pre>
+[{boss, [
+    {path, "../ChicagoBoss"},
+    {applications, [bascore]},
+    {assume_locale, "en"}]
+}]</pre>
+        </section>
+
+    </article>
+    <article class="smaller">
+        <h3>
+          Configurações em <i>Java</i>:
+      </h3>
+      <section>
+        <pre class="lang-xml">
+&lt;beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:tx="http://www.springframework.org/schema/tx" xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+         http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+         http://www.springframework.org/schema/context
+         http://www.springframework.org/schema/context/spring-context-3.1.xsd"&gt;
+
+    &lt;context:component-scan base-package="br.com.concretesolutions" /&gt;
+
+
+    &lt;bean class="org.apache.commons.dbcp.BasicDataSource"
+        destroy-method="close" id="dataSource"&gt;
+        &lt;property name="driverClassName" value="org.h2.Driver" /&gt;
+        &lt;property name="url" value="jdbc:h2:~/db/naturaDB;" /&gt;
+        &lt;property name="username" value="sa" /&gt;
+        &lt;property name="password" value="sa" /&gt;
+    &lt;/bean&gt;
+&lt;/beans&gt;
+</pre>
+        </section>
+
+    </article>
+    <article>
+        <h3>Qual o problema?</h3>
+        <br/><br/>
+        <ul>
+            <li>Python: <i>listas, tuplas, dicionários</i></li>
+            <li>Ruby: <i>listas, tuplas, dicionários</i></li>
+            <li>Erlang: <i>listas, tuplas, tuplas nomeadas</i></li>
+            <li>Lisp: <b><i><u>parênteses, parênteses, parênteses</u></b></i></li>
+            <br/><br/>
+            <li>Java: <i>XML??? Properties???</i>
+        </ul>
+    </article>
+    <article>
+        <h3>Nenhum problema! Annotations!</h3>
+        <section>
+            <pre class="lang-java">
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
+import javax.servlet.annotation.WebListener;
+
+@WebListener
+public class LoggingInitializerFilter implements ServletContextListener {
+
+    @Override
+    public void contextDestroyed(ServletContextEvent arg0) {
+    }
+
+    @Override
+    public void contextInitialized(ServletContextEvent arg0) {
+    }
+}           </pre>
+        </section>
+    </article>
+
+    <article>
+        <h3>Muita hora nessa calma!</h3>
+        <br/><br/><br/>
+        <ul>
+            <li>Apenas para configurações inerentes da aplicação</li>
+            <br/><br/>
+            <li>Diferenças entre ambientes devem ser externalizadas para ferramentas que gerenciem os ambientes (Puppet, Juju?)</li>
+        </ul>
+    </article>
+
+    <article>
+        <h3>Exemplo: WAR sem XML</h3>
+
+        <ul>
+            <li>Spring 3.1</li>
+            <li>Jersey 1.15</li>
+            <li>Apache Shiro (segurança) 1.2.1</li>
+            <li>Hibernate 4.1</li>
+        </ul>
+        <br />
+        Sem nada de:
+        <ul>
+            <li>application-context.xml</li>
+            <li>web.xml</li>
+            <li>spring-security.xml</li>
+            <li>persistence.xml</li>
+        </ul>
+    </article>
+
+    <article class="smaller">
+        <h3>Aplicação de exemplo</h3>
+        <br />
+        <b><i>
+        https://github.com/victorolinasc/java-xml-free
+        </i></b>
+        <p>Algumas das principais anotações e classes utilizadas:</p>
+        <table>
+            <tr>
+                <th>Nome</th>
+                <th>Framework</th>
+            </tr>
+            <tr>
+                <td>javax.servlet.annotation.WebListener</td>
+                <td>Servlet 3.0</td>
+            </tr>
+            <tr>
+                <td>org.springframework.web.WebApplicationInitializer</td>
+                <td>Spring Framework 3.1</td>
+            </tr>
+            <tr>
+                <td>org.springframework.context.annotation.Configuration</td>
+                <td>Spring Framework 3.1</td>
+            </tr>
+        </table>
+    </article>
+
+    <article>
+        <h3>Algumas vantagens da abordagem</h3>
+        <br />
+        <ul>
+            <li>Propriedades type-safe</li>
+            <li>Habilidade de customizar a incialização dos frameworks</li>
+            <li>Não depender das capacidades do namespace</li>
+            <li>Evita conhecer novas semânticas</li>
+            <li>Javadoc</li>
+        </ul>
+        <br />
+        <b>Algumas desvantagens</b>
+        <ul>
+            <li>Configuração compilada (???)</li>
+        </ul>
+    </article>
+
+    </section>
+
+</body>
+</html>
